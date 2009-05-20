@@ -22,7 +22,7 @@ public class TestWildcardCronValue {
 
 	@Before
 	public void setUp() throws Exception {
-		cut = new WildcardCronValue();
+		cut = new WildcardCronValue(0, 31);
 	}
 
 	@After

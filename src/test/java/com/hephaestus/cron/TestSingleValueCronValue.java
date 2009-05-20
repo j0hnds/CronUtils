@@ -25,7 +25,7 @@ public class TestSingleValueCronValue {
 
 	@Before
 	public void setUp() throws Exception {
-		cut = new SingleValueCronValue(GOOD_TEST_VALUE); 
+		cut = new SingleValueCronValue(0, 31, GOOD_TEST_VALUE); 
 	}
 
 	@After

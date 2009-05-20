@@ -113,7 +113,7 @@ public class CronValueFactory {
 		}
 		
 		if ("*".equals(valueSpec)) {
-			cronValue = new WildcardCronValue();
+			cronValue = new WildcardCronValue(lowerLimit, upperLimit);
 		} else {
 			Matcher m = SINGLE_VALUE_PATTERN.matcher(valueSpec);
 			if (m.matches()) {
@@ -121,12 +121,9 @@ public class CronValueFactory {
 				try {
 					singleValue = Integer.parseInt(m.group(1));
 				} catch (NumberFormatException e) {
-					throw new IllegalArgumentException("Invalid value specified: " + valueSpec);
+					throw new IllegalArgumentException("Invalid value specified: " + valueSpec, e);
 				}
-				if (lowerLimit > singleValue || upperLimit < singleValue) {
-					throw new IllegalArgumentException("Invalid value specified: " + valueSpec);
-				}
-				cronValue = new SingleValueCronValue(singleValue);
+				cronValue = new SingleValueCronValue(lowerLimit, upperLimit, singleValue);
 			} else {
 				m = RANGE_PATTERN.matcher(valueSpec);
 				if (m.matches()) {
@@ -136,23 +133,19 @@ public class CronValueFactory {
 						rangeLower = Integer.parseInt(m.group(1));
 						rangeUpper = Integer.parseInt(m.group(2));
 					} catch (NumberFormatException e) {
-						throw new IllegalArgumentException("Invalid range value: " + valueSpec);
+						throw new IllegalArgumentException("Invalid range value: " + valueSpec, e);
 					}
-					if (lowerLimit > rangeLower || upperLimit < rangeLower) {
-						throw new IllegalArgumentException("Invalid lower range value: " + rangeLower);
-					}
-					if (lowerLimit > rangeUpper || upperLimit < rangeUpper) {
-						throw new IllegalArgumentException("Invalid upper range value: " + rangeUpper);
-					}
-					cronValue = new RangeCronValue(rangeLower, rangeUpper);
+					cronValue = new RangeCronValue(lowerLimit, upperLimit, rangeLower, rangeUpper);
 				} else {
 					m = STEP_PATTERN.matcher(valueSpec);
 					if (m.matches()) {
-						int stepValue = Integer.parseInt(m.group(1));
-						if (stepValue == 0 || stepValue > upperLimit) {
-							throw new IllegalArgumentException("Invalid step value: " + stepValue);
+						int stepValue;
+						try {
+							stepValue = Integer.parseInt(m.group(1));
+						} catch (NumberFormatException e) {
+							throw new IllegalArgumentException("Invalid step value: " + valueSpec, e);
 						}
-						cronValue = new StepCronValue(stepValue);
+						cronValue = new StepCronValue(lowerLimit, upperLimit, stepValue);
 					} else {
 						throw new IllegalArgumentException("Invalid value specified: " + valueSpec);
 					}

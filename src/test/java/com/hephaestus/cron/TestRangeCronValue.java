@@ -28,7 +28,7 @@ public class TestRangeCronValue {
 
 	@Before
 	public void setUp() throws Exception {
-		cut = new RangeCronValue(LOWER_LIMIT, UPPER_LIMIT);
+		cut = new RangeCronValue(0, 31, LOWER_LIMIT, UPPER_LIMIT);
 	}
 
 	@After

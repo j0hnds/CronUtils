@@ -1,20 +1,33 @@
 package com.hephaestus.cron;
 
-public class RangeCronValue implements CronValue {
-	
-	private int lowerLimit;
-	private int upperLimit;
-	
-	public RangeCronValue(int lowerLimit, int upperLimit) {
-		if (lowerLimit > upperLimit) {
-			throw new IllegalArgumentException("Lower limit must be less than or equal to the upper limit");
+public class RangeCronValue extends CronValueBase {
+
+	private int rangeLower;
+	private int rangeUpper;
+
+	public RangeCronValue(int lowerLimit, int upperLimit, int rangeLower,
+			int rangeUpper) {
+		super(lowerLimit, upperLimit);
+
+		if (!isValueWithinLimits(rangeLower)) {
+			throw new IllegalArgumentException("Invalid lower range value: "
+					+ rangeLower);
 		}
-		this.lowerLimit = lowerLimit;
-		this.upperLimit = upperLimit;
+		if (!isValueWithinLimits(rangeUpper)) {
+			throw new IllegalArgumentException("Invalid lower range value: "
+					+ rangeUpper);
+		}
+		if (rangeLower > rangeUpper) {
+			throw new IllegalArgumentException(
+					"Lower limit must be less than or equal to the upper limit");
+		}
+		
+		this.rangeLower = rangeLower;
+		this.rangeUpper = rangeUpper;
 	}
 
 	public boolean isEffective(int value) {
-		return lowerLimit <= value && value <= upperLimit;
+		return rangeLower <= value && value <= rangeUpper;
 	}
 
 }

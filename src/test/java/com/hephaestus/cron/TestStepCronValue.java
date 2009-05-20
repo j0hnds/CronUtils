@@ -24,7 +24,7 @@ public class TestStepCronValue {
 
 	@Before
 	public void setUp() throws Exception {
-		cut = new StepCronValue(STEP_VALUE);
+		cut = new StepCronValue(0, 31, STEP_VALUE);
 	}
 
 	@After

@@ -1,10 +1,15 @@
 package com.hephaestus.cron;
 
-public class StepCronValue implements CronValue {
-	
+public class StepCronValue extends CronValueBase {
+
 	private int stepValue;
-	
-	public StepCronValue(int stepValue) {
+
+	public StepCronValue(int lowerLimit, int upperLimit, int stepValue) {
+		super(lowerLimit, upperLimit);
+		if (stepValue == 0 || stepValue > upperLimit) {
+			throw new IllegalArgumentException("Invalid step value: "
+					+ stepValue);
+		}
 		this.stepValue = stepValue;
 	}
 
