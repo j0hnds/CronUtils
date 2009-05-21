@@ -10,6 +10,9 @@ import java.util.regex.Pattern;
  */
 public class CronValueFactory {
 
+	// Wildcard value
+	private static final String WILDCARD_PATTERN = "*";
+	
 	// The regular expression pattern identifying a cron value that is just
 	// a single integer value.
 	private static Pattern SINGLE_VALUE_PATTERN = Pattern.compile("^([0-9]+)$");
@@ -226,7 +229,7 @@ public class CronValueFactory {
 					"Must provide a non-null value specification");
 		}
 
-		if ("*".equals(valueSpec)) {
+		if (WILDCARD_PATTERN.equals(valueSpec)) {
 
 			// This is a wildcard specification (*)
 			cronValue = new WildcardCronValue(lowerLimit, upperLimit);
