@@ -3,40 +3,45 @@ package com.hephaestus.cron;
 import static org.junit.Assert.*;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * This JUnit test evaluates the functionality of the step cron value.
+ * 
+ * @author Dave Sieh
+ */
 public class TestStepCronValue {
 
+	// Test constants
 	private static final int STEP_VALUE = 3;
 
+	// The class under test.
 	private StepCronValue cut;
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
 
 	@Before
 	public void setUp() throws Exception {
+		// Set up the class under test.
 		cut = new StepCronValue(0, 31, STEP_VALUE);
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		// Undefine the class under test.
 		cut = null;
 	}
 
+	/**
+	 * Positive test of effective value.
+	 */
 	@Test
 	public void testIsEffective() {
 		assertTrue(cut.isEffective(STEP_VALUE));
 	}
 
+	/**
+	 * Positive test of a 10 effective values.
+	 */
 	@Test
 	public void testIsEffectiveBunch() {
 		for (int i = 0; i < (10 * STEP_VALUE); i += STEP_VALUE) {
@@ -45,6 +50,9 @@ public class TestStepCronValue {
 		}
 	}
 
+	/**
+	 * Negative test of somewhat less than 20 effective values.
+	 */
 	@Test
 	public void testIsNotEffectiveBunch() {
 		for (int i = 0; i < 20; i++) {

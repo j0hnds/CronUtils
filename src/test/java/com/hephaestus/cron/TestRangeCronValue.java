@@ -3,63 +3,82 @@ package com.hephaestus.cron;
 import static org.junit.Assert.*;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * This JUnit test is designed to cover the functionality of a range Cron Value.
+ * 
+ * @author Dave Sieh
+ */
 public class TestRangeCronValue {
 
+	// The test constants
 	private static final int LOWER_LIMIT = 1;
 	private static final int UPPER_LIMIT = 31;
 	private static final int EFFECTIVE_VALUE = 10;
 	private static final int INEFFECTIVE_LESS = 0;
 	private static final int INEFFECTIVE_MORE = 32;
 
+	// The class under test.
 	private RangeCronValue cut;
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
 
 	@Before
 	public void setUp() throws Exception {
+		// Set up the RangeCronValue to test.
 		cut = new RangeCronValue(0, 31, LOWER_LIMIT, UPPER_LIMIT);
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		// Undefine the class under test.
+		cut = null;
 	}
 
+	/**
+	 * Positive test of effective value within range.
+	 */
 	@Test
 	public void testIsEffective() {
 		assertTrue(cut.isEffective(EFFECTIVE_VALUE));
 	}
 
+	/**
+	 * Positive test of effective value at lower end of range.
+	 */
 	@Test
 	public void testIsEffectiveEqualLowerLimit() {
 		assertTrue(cut.isEffective(LOWER_LIMIT));
 	}
 
+	/**
+	 * Positive test of effective value at upper end of range.
+	 */
 	@Test
 	public void testIsEffectiveEqualUpperLimit() {
 		assertTrue(cut.isEffective(UPPER_LIMIT));
 	}
 
+	/**
+	 * Negative test of effective value less than lower end of range.
+	 */
 	@Test
 	public void testIsNotEffectiveLess() {
 		assertFalse(cut.isEffective(INEFFECTIVE_LESS));
 	}
 
+	/**
+	 * Negative test of effective value greater than upper end of range.
+	 */
 	@Test
 	public void testIsNotEffectiveMore() {
 		assertFalse(cut.isEffective(INEFFECTIVE_MORE));
 	}
 
+	/**
+	 * Positive test of all integer values between and including the lower
+	 * and upper values of the range.
+	 */
 	@Test
 	public void testIsEffectiveAll() {
 		for (int i = LOWER_LIMIT; i <= UPPER_LIMIT; i++) {

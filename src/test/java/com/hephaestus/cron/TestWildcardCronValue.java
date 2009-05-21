@@ -3,33 +3,35 @@ package com.hephaestus.cron;
 import static org.junit.Assert.*;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * This JUnit test evaluates the functionality of the Wildcard Cron Value.
+ * 
+ * @author Dave Sieh
+ *
+ */
 public class TestWildcardCronValue {
 
+	// The class under test.
 	private WildcardCronValue cut;
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
 
 	@Before
 	public void setUp() throws Exception {
+		// Set up the class under test.
 		cut = new WildcardCronValue(0, 31);
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		// Undefine the class under test.
 		cut = null;
 	}
 
+	/**
+	 * Verify that any value between 0 and 100 is an effective value.
+	 */
 	@Test
 	public void testIsEffective() {
 		for (int i = 0; i < 100; i++) {
