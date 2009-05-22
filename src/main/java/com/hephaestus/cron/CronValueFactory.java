@@ -10,19 +10,35 @@ import java.util.regex.Pattern;
  */
 public class CronValueFactory {
 
+	// The array of days of the week. Using an array here so we can map
+	// the name of the day of week to its index number.
+	private static final String[] DOWS = { "sun", "mon", "tue", "wed", "thu",
+			"fri", "sat" };
+
+	// The part of the regular expression to match the days of the week.
+	private static final String DOW_EXPRESSION = "sun|mon|tue|wed|thu|fri|sat";
+
 	// Wildcard value
 	private static final String WILDCARD_PATTERN = "*";
-	
+
 	// The regular expression pattern identifying a cron value that is just
 	// a single integer value.
 	private static Pattern SINGLE_VALUE_PATTERN = Pattern.compile("^([0-9]+)$");
+	private static Pattern DOW_SINGLE_VALUE_PATTERN = Pattern.compile("^("
+			+ DOW_EXPRESSION + "|[0-9])$");
 
 	// The regular expression pattern identifying a cron range value.
 	private static Pattern RANGE_PATTERN = Pattern
 			.compile("^([0-9]+)-([0-9]+)$");
+	private static Pattern DOW_RANGE_PATTERN = Pattern.compile("^("
+			+ DOW_EXPRESSION + "|[0-9])-(" + DOW_EXPRESSION + "|[0-9])$");
 
 	// The regular expression pattern identifying a cron step value.
 	private static Pattern STEP_PATTERN = Pattern.compile("^\\*/([0-9]+)$");
+
+	// The regular expression pattern to match a textual day of week value
+	private static Pattern DOW_PATTERN = Pattern.compile("^(" + DOW_EXPRESSION
+			+ ")$");
 
 	// Constants defining the lower/upper limits for the different time types.
 	private static final int MINUTE_LOWER_LIMIT = 0;
@@ -129,7 +145,8 @@ public class CronValueFactory {
 	private static class DOWCronValueCreator implements CronValueCreator {
 
 		public CronValue createCronValue(String valueSpec) {
-			return parseCronValue(DOW_LOWER_LIMIT, DOW_UPPER_LIMIT, valueSpec);
+			return parseDOWCronValue(DOW_LOWER_LIMIT, DOW_UPPER_LIMIT,
+					valueSpec);
 		}
 
 	}
@@ -195,6 +212,62 @@ public class CronValueFactory {
 	}
 
 	/**
+	 * Given the day of week abbreviation, return the equivalent DOW number.
+	 * 
+	 * @param dow
+	 *            the day of week abbreviation.
+	 * 
+	 * @return the DOW number; -1 if and invalid day of week abbreviation is
+	 *         specified.
+	 */
+	private static int findDOW(String dow) {
+		int index = -1;
+
+		for (int i = 0; i < DOWS.length && index < 0; i++) {
+			if (DOWS[i].equals(dow)) {
+				index = i;
+			}
+		}
+
+		return index;
+	}
+
+	/**
+	 * Parses the specified value to return the day of week value converting as
+	 * necessary.
+	 * 
+	 * @param dow
+	 *            the day of week specification.
+	 * 
+	 * @return the day of week number.
+	 */
+	private static int getDOW(String dow) {
+		int value = -1;
+
+		if (DOW_PATTERN.matcher(dow).matches()) {
+			value = findDOW(dow);
+			if (value < 0) {
+				throw new IllegalArgumentException("Invalid value specified: "
+						+ dow);
+			}
+		} else {
+			try {
+				value = Integer.parseInt(dow);
+			} catch (NumberFormatException e) {
+				throw new IllegalArgumentException("Invalid value specified: "
+						+ dow, e);
+			}
+
+			if (value == 7) {
+				// Convert Sunday from 7 to 0.
+				value = 0;
+			}
+		}
+
+		return value;
+	}
+
+	/**
 	 * This method performs the work of identifying the type of CronValue to
 	 * create (wildcard, step, range, single value) by inspecting the value
 	 * specification provided.
@@ -209,6 +282,8 @@ public class CronValueFactory {
 	 *            the value lower limit of the Cron Value to create
 	 * @param upperLimit
 	 *            the value upper limit of the Cron Value to create
+	 * @param dowSpecification
+	 *            true if parsing a day of week specification.
 	 * @param valueSpec
 	 *            the specification of the value extracted from the cron
 	 *            specification.
@@ -218,7 +293,7 @@ public class CronValueFactory {
 	 */
 	private static CronValue parseCronValue(int lowerLimit, int upperLimit,
 			String valueSpec) {
-		
+
 		// The CronValue to be returned.
 		CronValue cronValue = null;
 		// The matcher to use.
@@ -258,6 +333,85 @@ public class CronValueFactory {
 				throw new IllegalArgumentException("Invalid range value: "
 						+ valueSpec, e);
 			}
+
+		} else if ((m = STEP_PATTERN.matcher(valueSpec)).matches()) {
+
+			// This is a step pattern (e.g. */3 - every third time period)
+			try {
+				int stepValue = Integer.parseInt(m.group(1));
+				cronValue = new StepCronValue(lowerLimit, upperLimit, stepValue);
+			} catch (NumberFormatException e) {
+				throw new IllegalArgumentException("Invalid step value: "
+						+ valueSpec, e);
+			}
+
+		} else {
+
+			// Unrecognized value pattern.
+			throw new IllegalArgumentException("Invalid value specified: "
+					+ valueSpec);
+
+		}
+
+		return cronValue;
+	}
+
+	/**
+	 * This method performs the work of identifying the type of CronValue to
+	 * create (wildcard, step, range, single value) by inspecting the value
+	 * specification provided.
+	 * 
+	 * Where appropriate, the values in the value specification will be checked
+	 * against the limits provided.
+	 * 
+	 * Runtime Exceptions may be thrown if the parser is unable to make sense of
+	 * the value specification or if values lie outside the specified limits.
+	 * 
+	 * @param lowerLimit
+	 *            the value lower limit of the Cron Value to create
+	 * @param upperLimit
+	 *            the value upper limit of the Cron Value to create
+	 * @param dowSpecification
+	 *            true if parsing a day of week specification.
+	 * @param valueSpec
+	 *            the specification of the value extracted from the cron
+	 *            specification.
+	 * 
+	 * @return a reference to a newly constructed CronValue object initialized
+	 *         as appropriate for the limits and value specification.
+	 */
+	private static CronValue parseDOWCronValue(int lowerLimit, int upperLimit,
+			String valueSpec) {
+
+		// The CronValue to be returned.
+		CronValue cronValue = null;
+		// The matcher to use.
+		Matcher m = null;
+
+		if (valueSpec == null) {
+			throw new IllegalArgumentException(
+					"Must provide a non-null value specification");
+		}
+
+		if (WILDCARD_PATTERN.equals(valueSpec)) {
+
+			// This is a wildcard specification (*)
+			cronValue = new WildcardCronValue(lowerLimit, upperLimit);
+
+		} else if ((m = DOW_SINGLE_VALUE_PATTERN.matcher(valueSpec)).matches()) {
+
+			// This is a single value specification for a day of the week.
+			int dowNumber = getDOW(m.group(1));
+			cronValue = new SingleValueCronValue(lowerLimit, upperLimit,
+					dowNumber);
+
+		} else if ((m = DOW_RANGE_PATTERN.matcher(valueSpec)).matches()) {
+
+			// This is a range value specification for day of week
+			int rangeLower = getDOW(m.group(1));
+			int rangeUpper = getDOW(m.group(2));
+			cronValue = new RangeCronValue(lowerLimit, upperLimit, rangeLower,
+					rangeUpper);
 
 		} else if ((m = STEP_PATTERN.matcher(valueSpec)).matches()) {
 
