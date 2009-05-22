@@ -26,6 +26,12 @@ public class TestMonthCronValueCreator {
 	private static final String TWISTED_RANGE = "11-10";
 	private static final String INVALID_LOWER_RANGE = "33-11";
 	private static final String INVALID_UPPER_RANGE = "8-42";
+	private static final String VALID_NAME_SINGLE_VALUE = "mar";
+	private static final String INVALID_NAME_SINGLE_VALUE = "Mar";
+	private static final String VALID_NAME_RANGE = "jul-sep";
+	private static final String INVALID_NAME_RANGE = "May-Aug";
+	private static final String TWISTED_NAME_RANGE = "oct-aug";
+	private static final String VALID_MIXED_RANGE = "feb-4";
 
 	// The class under test
 	private CronValueCreator cut;
@@ -42,6 +48,82 @@ public class TestMonthCronValueCreator {
 		cut = null;
 	}
 
+	/**
+	 * Tests the creation of a single value using the DOW name as the value.
+	 */
+	@Test
+	public void testValidNameSingleValue() {
+		CronValue cv = cut.createCronValue(VALID_NAME_SINGLE_VALUE);
+		assertTrue(cv.isEffective(3));
+	}
+	
+	/**
+	 * Tests the creation of a single value using an invalid DOW name as the value.
+	 */
+	@Test
+	public void testInvalidNameSingleValue() {
+		try {
+			cut.createCronValue(INVALID_NAME_SINGLE_VALUE);
+			fail("Should have thrown an exception on the bad value");
+		} catch (Exception e) {
+		}
+	}
+	
+
+	/**
+	 * Tests the creation of a range using the DOW names as the values.
+	 */
+	@Test
+	public void testValidNameRange() {
+		CronValue cv = cut.createCronValue(VALID_NAME_RANGE);
+		
+		for (int i=7; i<=9; i++) {
+			assertTrue("Value " + i + " should have been effective", cv.isEffective(i));
+		}
+		
+		assertFalse(cv.isEffective(6));
+		assertFalse(cv.isEffective(10));
+	}
+	
+	/**
+	 * Tests the creation of a range using the DOW names as the values.
+	 */
+	@Test
+	public void testValidMixedRange() {
+		CronValue cv = cut.createCronValue(VALID_MIXED_RANGE);
+		
+		for (int i=2; i<=4; i++) {
+			assertTrue("Value " + i + " should have been effective", cv.isEffective(i));
+		}
+		
+		assertFalse(cv.isEffective(1));
+		assertFalse(cv.isEffective(5));
+	}
+	
+	/**
+	 * Tests the creation of a range using an invalid DOW names as the values.
+	 */
+	@Test
+	public void testInvalidNameRANGE() {
+		try {
+			cut.createCronValue(INVALID_NAME_RANGE);
+			fail("Should have thrown an exception on the bad value");
+		} catch (Exception e) {
+		}
+	}
+	
+	/**
+	 * Tests the creation of a range using an invalid DOW names as the values.
+	 */
+	@Test
+	public void testTwistedNameRange() {
+		try {
+			cut.createCronValue(TWISTED_NAME_RANGE);
+			fail("Should have thrown an exception on the bad value");
+		} catch (Exception e) {
+		}
+	}
+	
 	/**
 	 * Tests the creation of the wildcard cron value.
 	 */
