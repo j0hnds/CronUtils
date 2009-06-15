@@ -18,6 +18,8 @@ public class TestCronSpecification {
 	private static final SimpleDateFormat SDF = new SimpleDateFormat(
 			"yyyy/MM/dd HH:mm:ss");
 	private static final String JANUARY_1_2009 = "2009/01/01 01:01:00";
+	private static final String JANUARY_1_2009_MIDNIGHT = "2009/01/01 00:00:00";
+	private static final String MAY_24_2009_MIDNIGHT = "2009/05/24 00:00:00";
 	private static final String MINUTE_ONE = "1 * * * *";
 	private static final String HOUR_ONE = "* 1 * * *";
 	private static final String DAY_ONE = "* * 1 * *";
@@ -176,6 +178,42 @@ public class TestCronSpecification {
 	public void testGetRawSpecification() {
 		CronSpecification cs = new CronSpecification(MINUTE_ONE);
 		assertEquals(MINUTE_ONE, cs.getRawSpecification());
+	}
+	
+	@Test
+	public void testYearlyShortcut() throws ParseException {
+		CronSpecification cs = new CronSpecification("@yearly");
+		assertTrue(cs.isDateEffective(SDF.parse(JANUARY_1_2009_MIDNIGHT)));
+	}
+
+	@Test
+	public void testAnnuallyShortcut() throws ParseException {
+		CronSpecification cs = new CronSpecification("@annually");
+		assertTrue(cs.isDateEffective(SDF.parse(JANUARY_1_2009_MIDNIGHT)));
+	}
+
+	@Test
+	public void testMonthlyShortcut() throws ParseException {
+		CronSpecification cs = new CronSpecification("@monthly");
+		assertTrue(cs.isDateEffective(SDF.parse(JANUARY_1_2009_MIDNIGHT)));
+	}
+
+	@Test
+	public void testWeeklyShortcut() throws ParseException {
+		CronSpecification cs = new CronSpecification("@weekly");
+		assertTrue(cs.isDateEffective(SDF.parse(MAY_24_2009_MIDNIGHT)));
+	}
+
+	@Test
+	public void testDailyShortcut() throws ParseException {
+		CronSpecification cs = new CronSpecification("@daily");
+		assertTrue(cs.isDateEffective(SDF.parse(MAY_24_2009_MIDNIGHT)));
+	}
+
+	@Test
+	public void testHoulyShortcut() throws ParseException {
+		CronSpecification cs = new CronSpecification("@hourly");
+		assertTrue(cs.isDateEffective(SDF.parse(MAY_24_2009_MIDNIGHT)));
 	}
 
 }

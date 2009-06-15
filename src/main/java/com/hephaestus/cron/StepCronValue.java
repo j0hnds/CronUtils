@@ -35,6 +35,7 @@ class StepCronValue extends CronValueBase {
 					+ stepValue);
 		}
 		
+		// Assign the step value.
 		this.stepValue = stepValue;
 	}
 
