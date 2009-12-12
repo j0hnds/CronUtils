@@ -1,4 +1,5 @@
 package com.hephaestus.cron;
+
 /*
  * Copyright (c) 2009 Dave Sieh
  *
@@ -30,34 +31,34 @@ package com.hephaestus.cron;
  */
 class SingleValueCronValue extends CronValueBase {
 
-	// The single value against which other values are tested for effectiveness
-	private int singleValue;
+    // The single value against which other values are tested for effectiveness
+    private int singleValue;
 
-	/**
-	 * Constructs a new SingleValueCronValue object with the limits and value.
-	 * 
-	 * @param lowerLimit
-	 *            the lower limit of values acceptable for this Cron Value.
-	 * @param upperLimit
-	 *            the upper limit of values acceptable for this Cron Value.
-	 * @param singleValue
-	 *            the value against which other values are tested for
-	 *            effectiveness.
-	 */
-	public SingleValueCronValue(int lowerLimit, int upperLimit, int singleValue) {
-		super(lowerLimit, upperLimit);
+    /**
+     * Constructs a new SingleValueCronValue object with the limits and value.
+     * 
+     * @param lowerLimit
+     *            the lower limit of values acceptable for this Cron Value.
+     * @param upperLimit
+     *            the upper limit of values acceptable for this Cron Value.
+     * @param singleValue
+     *            the value against which other values are tested for
+     *            effectiveness.
+     */
+    public SingleValueCronValue(int lowerLimit, int upperLimit, int singleValue) {
+        super(lowerLimit, upperLimit);
 
-		if (!isValueWithinLimits(singleValue)) {
-			throw new IllegalArgumentException("Invalid value specified: "
-					+ singleValue);
-		}
+        if (!isValueWithinLimits(singleValue)) {
+            throw new IllegalArgumentException("Invalid value specified: "
+                    + singleValue);
+        }
 
-		this.singleValue = singleValue;
-	}
+        this.singleValue = singleValue;
+    }
 
-	public boolean isEffective(int value) {
-		// Value must equal test value.
-		return singleValue == value;
-	}
+    public boolean isEffective(int value) {
+        // Value must equal test value.
+        return singleValue == value;
+    }
 
 }

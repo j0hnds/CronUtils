@@ -1,4 +1,5 @@
 package com.hephaestus.cron;
+
 /*
  * Copyright (c) 2009 Dave Sieh
  *
@@ -31,21 +32,21 @@ package com.hephaestus.cron;
  */
 class WildcardCronValue extends CronValueBase {
 
-	/**
-	 * Constructs a new WildcardCronValue with the specified limits.
-	 * 
-	 * @param lowerLimit
-	 *            the lower limit of values acceptable for this Cron Value.
-	 * @param upperLimit
-	 *            the upper limit of values acceptable for this Cron Value.
-	 */
-	public WildcardCronValue(int lowerLimit, int upperLimit) {
-		super(lowerLimit, upperLimit);
-	}
+    /**
+     * Constructs a new WildcardCronValue with the specified limits.
+     * 
+     * @param lowerLimit
+     *            the lower limit of values acceptable for this Cron Value.
+     * @param upperLimit
+     *            the upper limit of values acceptable for this Cron Value.
+     */
+    public WildcardCronValue(int lowerLimit, int upperLimit) {
+        super(lowerLimit, upperLimit);
+    }
 
-	public boolean isEffective(int value) {
-		// Any value is effective.
-		return true;
-	}
+    public boolean isEffective(int value) {
+        // Any value is effective.
+        return true;
+    }
 
 }

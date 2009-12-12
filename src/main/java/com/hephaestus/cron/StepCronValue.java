@@ -1,4 +1,5 @@
 package com.hephaestus.cron;
+
 /*
  * Copyright (c) 2009 Dave Sieh
  *
@@ -31,35 +32,35 @@ package com.hephaestus.cron;
  */
 class StepCronValue extends CronValueBase {
 
-	// The Step value to use to determine the effectiveness of other values.
-	private int stepValue;
+    // The Step value to use to determine the effectiveness of other values.
+    private int stepValue;
 
-	/**
-	 * Constructs a new StepCronValue with the specified limits and step value.
-	 * 
-	 * @param lowerLimit
-	 *            the lower limit of values acceptable for this Cron Value.
-	 * @param upperLimit
-	 *            the upper limit of values acceptable for this Cron Value.
-	 * @param stepValue
-	 *            the step value to use for determining the effectiveness of
-	 *            other values.
-	 */
-	public StepCronValue(int lowerLimit, int upperLimit, int stepValue) {
-		super(lowerLimit, upperLimit);
-		
-		if (stepValue == 0 || stepValue > upperLimit) {
-			throw new IllegalArgumentException("Invalid step value: "
-					+ stepValue);
-		}
-		
-		// Assign the step value.
-		this.stepValue = stepValue;
-	}
+    /**
+     * Constructs a new StepCronValue with the specified limits and step value.
+     * 
+     * @param lowerLimit
+     *            the lower limit of values acceptable for this Cron Value.
+     * @param upperLimit
+     *            the upper limit of values acceptable for this Cron Value.
+     * @param stepValue
+     *            the step value to use for determining the effectiveness of
+     *            other values.
+     */
+    public StepCronValue(int lowerLimit, int upperLimit, int stepValue) {
+        super(lowerLimit, upperLimit);
 
-	public boolean isEffective(int value) {
-		// Use the mod operator to determine effectiveness.
-		return value % stepValue == 0;
-	}
+        if (stepValue == 0 || stepValue > upperLimit) {
+            throw new IllegalArgumentException("Invalid step value: "
+                    + stepValue);
+        }
+
+        // Assign the step value.
+        this.stepValue = stepValue;
+    }
+
+    public boolean isEffective(int value) {
+        // Use the mod operator to determine effectiveness.
+        return value % stepValue == 0;
+    }
 
 }

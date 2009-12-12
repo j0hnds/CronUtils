@@ -1,4 +1,5 @@
 package com.hephaestus.cron;
+
 /*
  * Copyright (c) 2009 Dave Sieh
  *
@@ -31,51 +32,51 @@ package com.hephaestus.cron;
  */
 class RangeCronValue extends CronValueBase {
 
-	// The lower limit of the range
-	private int rangeLower;
+    // The lower limit of the range
+    private int rangeLower;
 
-	// The upper limit of the range
-	private int rangeUpper;
+    // The upper limit of the range
+    private int rangeUpper;
 
-	/**
-	 * Constructs a new RangeCronValue object with the specified limits.
-	 * 
-	 * Runtime Exceptions may be thrown if the range values are inappropriate or
-	 * if the range value is reversed.
-	 * 
-	 * @param lowerLimit
-	 *            the lower limit of values acceptable for this Cron Value.
-	 * @param upperLimit
-	 *            the upper limit of values acceptable for this Cron Value.
-	 * @param rangeLower
-	 *            the lower limit of the range of effective values.
-	 * @param rangeUpper
-	 *            the upper limit of the range of effective values.
-	 */
-	public RangeCronValue(int lowerLimit, int upperLimit, int rangeLower,
-			int rangeUpper) {
-		super(lowerLimit, upperLimit);
+    /**
+     * Constructs a new RangeCronValue object with the specified limits.
+     * 
+     * Runtime Exceptions may be thrown if the range values are inappropriate or
+     * if the range value is reversed.
+     * 
+     * @param lowerLimit
+     *            the lower limit of values acceptable for this Cron Value.
+     * @param upperLimit
+     *            the upper limit of values acceptable for this Cron Value.
+     * @param rangeLower
+     *            the lower limit of the range of effective values.
+     * @param rangeUpper
+     *            the upper limit of the range of effective values.
+     */
+    public RangeCronValue(int lowerLimit, int upperLimit, int rangeLower,
+            int rangeUpper) {
+        super(lowerLimit, upperLimit);
 
-		if (!isValueWithinLimits(rangeLower)) {
-			throw new IllegalArgumentException("Invalid lower range value: "
-					+ rangeLower);
-		}
-		if (!isValueWithinLimits(rangeUpper)) {
-			throw new IllegalArgumentException("Invalid lower range value: "
-					+ rangeUpper);
-		}
-		if (rangeLower > rangeUpper) {
-			throw new IllegalArgumentException(
-					"Lower limit must be less than or equal to the upper limit");
-		}
+        if (!isValueWithinLimits(rangeLower)) {
+            throw new IllegalArgumentException("Invalid lower range value: "
+                    + rangeLower);
+        }
+        if (!isValueWithinLimits(rangeUpper)) {
+            throw new IllegalArgumentException("Invalid lower range value: "
+                    + rangeUpper);
+        }
+        if (rangeLower > rangeUpper) {
+            throw new IllegalArgumentException(
+                    "Lower limit must be less than or equal to the upper limit");
+        }
 
-		this.rangeLower = rangeLower;
-		this.rangeUpper = rangeUpper;
-	}
+        this.rangeLower = rangeLower;
+        this.rangeUpper = rangeUpper;
+    }
 
-	public boolean isEffective(int value) {
-		// An inclusive test of the value.
-		return rangeLower <= value && value <= rangeUpper;
-	}
+    public boolean isEffective(int value) {
+        // An inclusive test of the value.
+        return rangeLower <= value && value <= rangeUpper;
+    }
 
 }

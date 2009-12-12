@@ -1,4 +1,5 @@
 package com.hephaestus.cron;
+
 /*
  * Copyright (c) 2009 Dave Sieh
  *
@@ -27,16 +28,16 @@ package com.hephaestus.cron;
  */
 public interface CronValue {
 
-	/**
-	 * Tests the specified value to determine if it is effective with respect to
-	 * the cron value. The nature of what it means to be 'effective' depends on
-	 * the implementation of the CronValue.
-	 * 
-	 * @param value
-	 *            the value to test for effectiveness.
-	 * 
-	 * @return true if the value is deemed effective with respect to the
-	 *         implementation of the CronValue.
-	 */
-	boolean isEffective(int value);
+    /**
+     * Tests the specified value to determine if it is effective with respect to
+     * the cron value. The nature of what it means to be 'effective' depends on
+     * the implementation of the CronValue.
+     * 
+     * @param value
+     *            the value to test for effectiveness.
+     * 
+     * @return true if the value is deemed effective with respect to the
+     *         implementation of the CronValue.
+     */
+    boolean isEffective(int value);
 }

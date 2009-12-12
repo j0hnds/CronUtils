@@ -1,4 +1,5 @@
 package com.hephaestus.cron;
+
 /*
  * Copyright (c) 2009 Dave Sieh
  *
@@ -30,40 +31,40 @@ import org.junit.Test;
  * @author Dave Sieh
  */
 public class TestSingleValueCronValue {
-	
-	// Test constants
-	private static int GOOD_TEST_VALUE = 11;
-	private static int BAD_TEST_VALUE = 8;
-	
-	// The class under test.
-	private SingleValueCronValue cut;
 
-	@Before
-	public void setUp() throws Exception {
-		// Set up the class under test
-		cut = new SingleValueCronValue(0, 31, GOOD_TEST_VALUE); 
-	}
+    // Test constants
+    private static int GOOD_TEST_VALUE = 11;
+    private static int BAD_TEST_VALUE = 8;
 
-	@After
-	public void tearDown() throws Exception {
-		// Tear down the class under test.
-		cut = null;
-	}
+    // The class under test.
+    private SingleValueCronValue cut;
 
-	/**
-	 * Positive test of effective value.
-	 */
-	@Test
-	public void testIsEffective() {
-		assertTrue(cut.isEffective(GOOD_TEST_VALUE));
-	}
+    @Before
+    public void setUp() throws Exception {
+        // Set up the class under test
+        cut = new SingleValueCronValue(0, 31, GOOD_TEST_VALUE);
+    }
 
-	/**
-	 * Negative test of effective value.
-	 */
-	@Test
-	public void testIsNotEffective() {
-		assertFalse(cut.isEffective(BAD_TEST_VALUE));
-	}
+    @After
+    public void tearDown() throws Exception {
+        // Tear down the class under test.
+        cut = null;
+    }
+
+    /**
+     * Positive test of effective value.
+     */
+    @Test
+    public void testIsEffective() {
+        assertTrue(cut.isEffective(GOOD_TEST_VALUE));
+    }
+
+    /**
+     * Negative test of effective value.
+     */
+    @Test
+    public void testIsNotEffective() {
+        assertFalse(cut.isEffective(BAD_TEST_VALUE));
+    }
 
 }
